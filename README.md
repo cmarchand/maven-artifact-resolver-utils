@@ -44,8 +44,8 @@ public MyMojo extends AbstractMojo {
     DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
     coordinate.setGroupId("groupId");
     coordinate.setArtifactId("artifactId");
-    // if not jar
-    coordinate.setClassifier("zip");
+    // if different classifier
+    coordinate.setClassifier("classifier");
     coordinate.setVersion("1.0.0");
     // resolves artifact
     Artifact foundArtifact = resolverUtils.resolveArtifact(coordinate);
@@ -55,4 +55,18 @@ public MyMojo extends AbstractMojo {
 }
 ```
 
-Have good fun
+This first method is perfect to resolve dependencies, i.e. jar artifacts.
+
+If you need to resolve an artifact that is not a jar, you have to use a ArtifactCoordinate instead of a DependableCoordinate :
+
+```
+    ArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
+    coordinate.setGroupId("groupId");
+    coordinate.setArtifactId("artifactId");
+    coordiante.setExtension("zip");
+    coordinate.setClassifier("delivery");
+    coordinate.setVersion("1.0.0");
+    Artifact foundArtifact = resolverUtils.resolveArtifact(coordinate);
+```
+
+Have fun !
