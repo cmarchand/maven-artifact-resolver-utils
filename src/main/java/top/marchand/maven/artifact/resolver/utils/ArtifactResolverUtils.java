@@ -106,12 +106,12 @@ public class ArtifactResolverUtils {
     }
     
     /**
-     * Resolves the coordinates to an Artifact.
+     * Resolves the coordinates to an Artifact. Use only when the search artifact is a dependency.
      * @param coordinate The artifact to search for
      * @return The resolved Artifact
      * @throws ArtifactResolverException In case of not found
      */
-    public Artifact resolveArtifact(final DefaultDependableCoordinate coordinate) throws ArtifactResolverException {
+    public Artifact resolveArtifact(final DependableCoordinate coordinate) throws ArtifactResolverException {
         ProjectBuildingRequest buildingRequest =
             new DefaultProjectBuildingRequest( session.getProjectBuildingRequest() );
 
@@ -120,6 +120,22 @@ public class ArtifactResolverUtils {
         ArtifactResult artifactResult = artifactResolver.resolveArtifact( buildingRequest, toArtifactCoordinate( coordinate ) );
         Artifact foundArtifact = artifactResult.getArtifact();
         return foundArtifact;
+    }
+    
+    /**
+     * Resolves the coordinate to an artifact. Use for dependencies and other artifacts,
+     * mainly when extension are not jar.
+     * @param coordinate The coordinate to search for
+     * @return The artifact found
+     * @throws ArtifactResolverException If artifact can not be found
+     */
+    public Artifact resolveArtifact(ArtifactCoordinate coordinate) throws ArtifactResolverException {
+        ProjectBuildingRequest buildingRequest =
+            new DefaultProjectBuildingRequest( session.getProjectBuildingRequest() );
+
+        buildingRequest.setRemoteRepositories( repoList );
+        ArtifactResult artifactResult = artifactResolver.resolveArtifact(buildingRequest, coordinate);
+        return artifactResult.getArtifact();
     }
 
     private ArtifactCoordinate toArtifactCoordinate( DependableCoordinate dependableCoordinate ) {
